@@ -5,7 +5,7 @@ import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.generateProtoTasks
 
 plugins {
-    id("network.link.ln.v2.kotlin-library-conventions")
+    id("network.finschia.ln.v2.kotlin-library-conventions")
     id("com.google.protobuf")
     id("distribution")
 }

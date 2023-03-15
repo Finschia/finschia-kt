@@ -1,5 +1,5 @@
 plugins {
-    id("network.link.ln.v2.kotlin-library-conventions")
+    id("network.finschia.ln.v2.kotlin-library-conventions")
     kotlin("plugin.serialization") version "1.5.30"
 }
 
