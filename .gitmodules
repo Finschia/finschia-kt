@@ -1,0 +1,9 @@
+[submodule "lbm-sdk"]
+	path = protobuf/repositories/lbm-sdk
+	url = https://github.com/line/lbm-sdk.git
+[submodule "wasmd"]
+	path = protobuf/repositories/wasmd
+	url = https://github.com/line/wasmd.git
+[submodule "ibc-go"]
+	path = protobuf/repositories/ibc-go
+	url = https://github.com/line/ibc-go.git
