@@ -118,7 +118,7 @@ should be targeted against the release candidate branch.
     - All links must be link-ified
     - Copy the entries into a `RELEASE_CHANGELOG.md`, this is needed so the bot knows which entries to add to the release page on github.
 - After all test has successfully completed, create the release branch
-  (`rc/vX.XX.X`) from the `RC` branch
+  (`release/vX.XX.X`) from the `RC` branch
 - Create a PR to `main` to incorporate the `CHANGELOG.md` updates
 - Tag the release (use `git tag -a`) and create a release in Github
 - Delete the `RC` branches
