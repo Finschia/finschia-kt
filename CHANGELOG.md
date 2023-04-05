@@ -36,7 +36,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 # Changelog
 
-[//]: # (## [Unreleased]&#40;https://github.com/Finschia/finschia-kt/compare/v0.46.0...HEAD&#41;)
+## [Unreleased]
 
 ### Added
 
@@ -53,3 +53,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Build, CI
 
 ### Document Updates
+
+<!-- Release links -->
+[Unreleased]: https://github.com/line/finschia-kt/compare/8aa2005...HEAD
