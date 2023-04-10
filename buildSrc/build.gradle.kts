@@ -22,6 +22,6 @@ tasks.named("build") {
 
 tasks.register("updateSubmodule") {
     exec {
-        commandLine("git", "submodule", "update", "--init")
+        commandLine("git", "submodule", "update", "--init", "--remote")
     }
 }
