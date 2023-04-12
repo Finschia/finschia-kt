@@ -15,3 +15,13 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
 }
+
+tasks.named("build") {
+    dependsOn("updateSubmodule")
+}
+
+tasks.register("updateSubmodule") {
+    exec {
+        commandLine("git", "submodule", "update", "--init", "--remote")
+    }
+}
