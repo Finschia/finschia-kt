@@ -7,3 +7,6 @@
 [submodule "ibc-go"]
 	path = protobuf/repositories/ibc-go
 	url = https://github.com/line/ibc-go.git
+[submodule "protobuf/repositories/finschia-sdk"]
+	path = protobuf/repositories/finschia-sdk
+	url = https://github.com/Finschia/finschia-sdk
