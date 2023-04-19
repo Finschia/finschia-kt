@@ -1,5 +1,5 @@
 plugins {
-    id("network.finschia.ln.v2.kotlin-application-conventions")
+    id("network.finschia.sdk.kotlin-application-conventions")
     kotlin("plugin.serialization") version "1.5.30"
 }
 
@@ -16,5 +16,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("network.finschia.ln.v2.example.ClientKt")
+    mainClass.set("network.finschia.sdk.example.ClientKt")
 }

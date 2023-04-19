@@ -1,5 +1,5 @@
 plugins {
-    id("network.finschia.ln.v2.kotlin-application-conventions")
+    id("network.finschia.sdk.kotlin-application-conventions")
 }
 
 val bitcoinjVersion = "0.15.6"
@@ -13,5 +13,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("network.finschia.ln.v2.example.ClientKt")
+    mainClass.set("network.finschia.sdk.example.ClientKt")
 }

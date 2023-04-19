@@ -1,5 +1,5 @@
 plugins {
-    id("network.finschia.ln.v2.kotlin-application-conventions")
+    id("network.finschia.sdk.kotlin-application-conventions")
 }
 
 dependencies {
@@ -10,5 +10,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("network.finschia.ln.v2.example.AccountQueryClient")
+    mainClass.set("network.finschia.sdk.example.AccountQueryClient")
 }

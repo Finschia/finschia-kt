@@ -1,10 +1,10 @@
 # finschia-kt
 
-gRPC client library in kotlin for finschia (https://github.com/line/finschia).
+gRPC client library in kotlin for finschia (https://github.com/Finschia/finschia).
 
-Requires [lbm-sdk v0.47.0-alpha1](https://github.com/line/lbm-sdk/tree/v0.47.0-alpha1)
+Requires [lbm-sdk v0.47.0-alpha1](https://github.com/Finschia/finschia-sdk/tree/v0.47.0-alpha1)
 
-Current lbm-sdk version applied to finschia-kt/protobuf is [lbm-sdk v0.47.0-alpha1](https://github.com/line/lbm-sdk/tree/v0.47.0-alpha1)
+Current finschia-sdk version applied to finschia-kt/protobuf is [finschia-sdk v0.47.0-alpha1](https://github.com/Finschia/finschia-sdk/tree/v0.47.0-alpha1)
 
 ## Build
 
@@ -90,7 +90,7 @@ The former is using the tx wrapper, while the latter does not use the wrapper.
 
 ### 1. Run lbm-sdk simapp
 
-Build with reference to [Quick Start build](https://github.com/line/lbm-sdk/tree/v0.47.0-alpha1#quick-start).
+Build with reference to [Quick Start build](https://github.com/Finschia/finschia-sdk/tree/v0.47.0-alpha1#quick-start).
 
 Initialize and configure simapp.
 
@@ -114,7 +114,7 @@ $ simd start --home ~/simapp
 ### 2. Replace hard-coded arguments
 
 To confirm it's possible to send transactions to the chain created above using finschia-kt, replace the following
-three parts of the [without-tx-wrapper-example/src/main/kotlin/network/link/ln/v2/example/Client.kt](https://github.com/line/finschia-kt/blob/main/examples/without-tx-wrapper-example/src/main/kotlin/network/link/ln/v2/example/Client.kt).
+three parts of the [without-tx-wrapper-example/src/main/kotlin/network/link/sdk/example/Client.kt](https://github.com/Finschia/finschia-kt/blob/main/examples/without-tx-wrapper-example/src/main/kotlin/network/link/sdk/example/Client.kt).
 
 1. **Chain ID**: constant of the name `CHAIN_ID` in `ConcreteScenarios`
    ```go

@@ -1,5 +1,5 @@
 plugins {
-    id("network.finschia.ln.v2.kotlin-library-conventions")
+    id("network.finschia.sdk.kotlin-library-conventions")
 }
 
 val guavaVersion = "28.1-jre"
