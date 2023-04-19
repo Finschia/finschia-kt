@@ -5,7 +5,7 @@ import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.generateProtoTasks
 
 plugins {
-    id("network.finschia.ln.v2.kotlin-library-conventions")
+    id("network.finschia.sdk.kotlin-library-conventions")
     id("com.google.protobuf")
     id("distribution")
 }
@@ -13,8 +13,8 @@ plugins {
 sourceSets {
     main {
         proto {
-            srcDir ("./repositories/lbm-sdk/proto")
-            srcDir ("./repositories/lbm-sdk/third_party/proto")
+            srcDir ("./repositories/finschia-sdk/proto")
+            srcDir ("./repositories/finschia-sdk/third_party/proto")
             srcDir ("./repositories/wasmd/proto")
             srcDir ("./repositories/ibc-go/proto")
         }
@@ -59,7 +59,7 @@ tasks.named("build") {
 tasks.register("checkoutSubModules") {
     var subModules = mapOf(
         // {moduleName} to {version}
-        "lbm-sdk" to "v0.47.0-alpha1",
+        "finschia-sdk" to "v0.47.0-alpha1",
         "ibc-go" to "v3.3.2",
         "wasmd" to "v0.1.0"
     )
