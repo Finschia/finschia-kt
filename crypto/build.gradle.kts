@@ -2,6 +2,7 @@ plugins {
     id("network.finschia.sdk.kotlin-library-conventions")
 }
 
+// Dependency versions
 val guavaVersion = "28.1-jre"
 val commonsIOVersion = "2.6"
 val bouncycastleVersion = "1.64"
@@ -34,5 +35,84 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
+}
 
+java{
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.javadoc {
+    if (JavaVersion.current().isJava9Compatible) {
+        (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
+    }
+}
+
+// Maven artifact
+val groupIdVal = "io.github.finschia"
+val artifactIdVal = "finschia-kt-crypto"
+val versionVal: String? = System.getProperty("VERSION")
+
+// Maven pom info
+val pomName = "finschia"
+val pomDesc = artifactIdVal
+val pomUrl = "https://github.com/Finschia/finschia-kt"
+val pomScmConnection = "scm:git:git://github.com/Finschia/finschia-kt.git"
+val pomDeveloperConnection = "scm:git:ssh://github.com/Finschia/finschia-kt.git"
+val pomScmUrl = "https://github.com/Finschia/finschia-kt"
+
+// Maven account
+val ossrhUserName = System.getenv("OSSRH_USERNAME")
+val ossrhPassword = System.getenv("OSSRH_PW")
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            groupId = groupIdVal
+            artifactId = artifactIdVal
+            version = versionVal?.substring(1) // without v
+
+            from(components["java"])
+            pom {
+                name.set(pomName)
+                description.set(pomDesc)
+                url.set(pomUrl)
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("dev")
+                        name.set("dev")
+                        email.set("dev@finschia.org")
+                    }
+                }
+                scm {
+                    connection.set(pomScmConnection)
+                    developerConnection.set(pomDeveloperConnection)
+                    url.set(pomScmUrl)
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = uri("https://s01.oss.sonatype.org/content/repositories/releases/")
+            credentials {
+                username = ossrhUserName
+                password = ossrhPassword
+            }
+        }
+    }
+}
+
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["mavenJava"])
 }
