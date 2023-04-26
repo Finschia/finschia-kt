@@ -42,6 +42,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ### Changed
 * [\#6](https://github.com/Finschia/finschia-kt/pull/6) Rename package 'ln.v2' -> 'sdk'
+* (ci) [\#11](https://github.com/Finschia/finschia-kt/pull/11) Add ci/cd to publish to maven
 
 ### Deprecated
 
