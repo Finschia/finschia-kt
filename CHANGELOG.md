@@ -51,6 +51,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Security
 
 ### Build, CI
+* [\#14](https://github.com/Finschia/finschia-kt/pull/14) change groupID for maven publish. remove tx module from maven publish.
 
 ### Document Updates
 
