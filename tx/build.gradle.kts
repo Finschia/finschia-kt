@@ -15,7 +15,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxVersion")
 }
 
-java{
+java {
     withJavadocJar()
     withSourcesJar()
 }
@@ -25,25 +25,24 @@ tasks.javadoc {
         (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
     }
 }
-
-// Maven artifact
-val groupIdVal = "io.github.finschia"
-val artifactIdVal = "finschia-kt-tx"
-val versionVal: String? = System.getProperty("VERSION")
-
-// Maven pom info
-val pomName = "finschia"
-val pomDesc = artifactIdVal
-val pomUrl = "https://github.com/Finschia/finschia-kt"
-val pomScmConnection = "scm:git:git://github.com/Finschia/finschia-kt.git"
-val pomDeveloperConnection = "scm:git:ssh://github.com/Finschia/finschia-kt.git"
-val pomScmUrl = "https://github.com/Finschia/finschia-kt"
-
-// Maven account
-val ossrhUserName = System.getenv("OSSRH_USERNAME")
-val ossrhPassword = System.getenv("OSSRH_PW")
-
 publishing {
+    // Maven artifact
+    val groupIdVal = "io.github.finschia"
+    val artifactIdVal = "finschia-kt-tx"
+    val versionVal: String? = System.getProperty("VERSION")
+
+    // Maven pom info
+    val pomName = "finschia"
+    val pomDesc = artifactIdVal
+    val pomUrl = "https://github.com/Finschia/finschia-kt"
+    val pomScmConnection = "scm:git:git://github.com/Finschia/finschia-kt.git"
+    val pomDeveloperConnection = "scm:git:ssh://github.com/Finschia/finschia-kt.git"
+    val pomScmUrl = "https://github.com/Finschia/finschia-kt"
+
+    // Maven account
+    val ossrhUserName = System.getenv("OSSRH_USERNAME")
+    val ossrhPassword = System.getenv("OSSRH_PW")
+
     publications {
         create<MavenPublication>("mavenJava") {
             groupId = groupIdVal
