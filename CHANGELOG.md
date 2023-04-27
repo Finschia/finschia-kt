@@ -41,7 +41,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Added
 
 ### Changed
-* [\#6](https://github.com/Finschia/finschia-kt/pull/6) Rename package 'ln.v2' -> 'sdk'
 
 ### Deprecated
 
@@ -53,9 +52,20 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ### Build, CI
 
-* (build) [\#4](https://github.com/Finschia/finschia-kt/pull/4) Add gradle `updateSubmodule` task and `checkoutSubModule` task to run `git submodule update --init --remote` with specific version before `build task` 
-
 ### Document Updates
 
+
+## [v0.2.1]
+
+### Changed
+* [\#6](https://github.com/Finschia/finschia-kt/pull/6) Rename package 'ln.v2' -> 'sdk'
+* (ci) [\#11](https://github.com/Finschia/finschia-kt/pull/11) Add ci/cd to publish to maven
+
+### Build, CI
+
+* (build) [\#4](https://github.com/Finschia/finschia-kt/pull/4) Add gradle `updateSubmodule` task and `checkoutSubModule` task to run `git submodule update --init --remote` with specific version before `build task`
+
+
 <!-- Release links -->
-[Unreleased]: https://github.com/Finschia/finschia-kt/compare/8aa2005...HEAD
+[Unreleased]: https://github.com/Finschia/finschia-kt/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/Finschia/finschia-kt/compare/8aa2005...v0.2.1
