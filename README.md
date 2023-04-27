@@ -2,33 +2,16 @@
 
 gRPC client library in kotlin for finschia (https://github.com/Finschia/finschia).
 
-Requires [finschia-sdk v0.47.0-alpha1](https://github.com/Finschia/finschia-sdk/tree/v0.47.0-alpha1)
+Requires [finschia-sdk v0.47.0](https://github.com/Finschia/finschia-sdk/tree/v0.47.0)
 
-Current finschia-sdk version applied to finschia-kt/protobuf is [finschia-sdk v0.47.0-alpha1](https://github.com/Finschia/finschia-sdk/tree/v0.47.0-alpha1)
+Current finschia-sdk version applied to finschia-kt/protobuf is [finschia-sdk v0.47.0](https://github.com/Finschia/finschia-sdk/tree/v0.47.0)
 
 ## Build
 
 You can build the project by following command, which also runs all the unit tests:
 
 ```shell
-$ git submodule update --init
 $ ./gradlew build
-```
-
-Note that any version of finschia-kt is only compatible with a certain finschia-sdk version. The corresponding finschia-sdk
-version that the current repository supports can be found in the tag or commit hash of `proto/repositories/finschia-sdk`
-submodule, using the following command.
-
-```shell
-$ cd protobuf/repositories/finschia-sdk && git describe --always && cd -
-```
-
-If you are a finschia-kt developer or contributor and trying to use another version of finschia-sdk, `git checkout`
-the appropriate version in the finschia-sdk submodule before building this repository. The following command is an example
-of using finschia-sdk `v0.47.0-alpha1`.
-
-```shell
-$ cd protobuf/repositories/finschia-sdk && git checkout v0.47.0-alpha1 && cd -
 ```
 
 ## How to use
@@ -90,7 +73,7 @@ The former is using the tx wrapper, while the latter does not use the wrapper.
 
 ### 1. Run finschia-sdk simapp
 
-Build with reference to [Quick Start build](https://github.com/Finschia/finschia-sdk/tree/v0.47.0-alpha1#quick-start).
+Build with reference to [Quick Start build](https://github.com/Finschia/finschia-sdk/tree/v0.47.0#quick-start).
 
 Initialize and configure simapp.
 
