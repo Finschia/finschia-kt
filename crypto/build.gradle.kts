@@ -50,7 +50,7 @@ tasks.javadoc {
 
 publishing {
     // Maven artifact
-    val groupIdVal = "io.github.finschia"
+    val groupIdVal = "network.finschia"
     val artifactIdVal = "finschia-kt-crypto"
     val versionVal: String? = System.getProperty("VERSION")
 
