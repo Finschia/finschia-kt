@@ -1,5 +1,8 @@
 plugins {
-    id("network.finschia.sdk.kotlin-library-conventions")
+    kotlin
+    `java-library`
+    `maven-publish`
+    signing
 }
 
 // Dependency versions
@@ -40,6 +43,10 @@ dependencies {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+repositories {
+    mavenCentral()
 }
 
 tasks.javadoc {
