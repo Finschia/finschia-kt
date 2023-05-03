@@ -47,6 +47,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Removed
 
 ### Fixed
+* build: [#15](https://github.com/Finschia/finschia-kt/pull/15) fix for downloading maven dependency with 'descriptor.bin error'
 
 ### Security
 
