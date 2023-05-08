@@ -4,8 +4,8 @@ plugins {
 
 dependencies {
     implementation(project(":tx"))
-    implementation(project(":crypto"))
-    implementation(project(":protobuf"))
+    implementation("network.finschia:finschia-kt-crypto:0.2.2")
+    implementation("network.finschia:finschia-proto:1.0.1")
     runtimeOnly(libs.grpc.netty)
 }
 

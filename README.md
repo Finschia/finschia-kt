@@ -6,6 +6,24 @@ Requires [finschia-sdk v0.47.0](https://github.com/Finschia/finschia-sdk/tree/v0
 
 Current finschia-sdk version applied to finschia-kt/protobuf is [finschia-sdk v0.47.0](https://github.com/Finschia/finschia-sdk/tree/v0.47.0)
 
+## Using SDK
+
+* finschia-kt SDK(crypto)
+```kotlin
+val sdkCryptoVersion = "0.2.2"
+dependencies {
+    implementation("network.finschia:finschia-kt-crypto:$sdkCryptoVersion")
+}
+```
+* finschia-kt SDK(proto)
+```kotlin
+val sdkProtoVersion = "1.0.1"
+
+dependencies {
+   implementation("network.finschia:finschia-proto:$sdkProtoVersion")
+}
+```
+
 ## Build
 
 You can build the project by following command, which also runs all the unit tests:

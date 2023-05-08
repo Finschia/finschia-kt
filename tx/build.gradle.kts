@@ -8,8 +8,8 @@ val bitcoinjVersion = "0.15.6"
 val kotlinxVersion = "1.2.0"
 
 dependencies {
-    implementation(project(":crypto"))
-    api(project(":protobuf"))
+    implementation("network.finschia:finschia-kt-crypto:0.2.2")
+    implementation("network.finschia:finschia-proto:1.0.1")
 
     implementation("org.bitcoinj:bitcoinj-core:$bitcoinjVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxVersion")

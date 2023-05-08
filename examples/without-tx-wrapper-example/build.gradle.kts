@@ -5,8 +5,8 @@ plugins {
 val bitcoinjVersion = "0.15.6"
 
 dependencies {
-    implementation(project(":crypto"))
-    implementation(project(":protobuf"))
+    implementation("network.finschia:finschia-kt-crypto:0.2.2")
+    implementation("network.finschia:finschia-proto:1.0.1")
     implementation("org.bitcoinj:bitcoinj-core:$bitcoinjVersion")
 
     runtimeOnly(libs.grpc.netty)
