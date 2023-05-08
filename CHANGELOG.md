@@ -53,6 +53,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 ### Build, CI
 * [\#14](https://github.com/Finschia/finschia-kt/pull/14) change groupID for maven publish. remove tx module from maven publish.
+* build: [\#16](https://github.com/Finschia/finschia-kt/pull/16) change build script to use maven publications(crypto, proto) and update README
 
 ### Document Updates
 
