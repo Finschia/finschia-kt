@@ -3,10 +3,13 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":tx"))
-    implementation(project(":crypto"))
-    implementation(project(":protobuf"))
     runtimeOnly(libs.grpc.netty)
+
+    // Finschia sdk
+    implementation("network.finschia:finschia-kt-crypto:0.2.2")
+    implementation("network.finschia:finschia-proto:1.0.1")
+
+    implementation(project(":tx"))
 }
 
 application {

@@ -32,12 +32,13 @@ dependencies {
     implementation("org.bitcoinj:bitcoinj-core:$bitcoinjVersion")
     implementation("org.web3j:crypto:$web3jVersion")
 
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
+
     testImplementation("org.mockito:mockito-core:$mockitoVersion")
     testImplementation("org.mockito:mockito-inline:$mockitoVersion")
     testImplementation("com.google.truth:truth:$truthVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$jupiterVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
 }
 
 java {
