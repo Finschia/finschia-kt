@@ -47,15 +47,21 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Removed
 
 ### Fixed
-* build: [#15](https://github.com/Finschia/finschia-kt/pull/15) fix for downloading maven dependency with 'descriptor.bin error'
 
 ### Security
 
 ### Build, CI
-* [\#14](https://github.com/Finschia/finschia-kt/pull/14) change groupID for maven publish. remove tx module from maven publish.
-* build: [\#16](https://github.com/Finschia/finschia-kt/pull/16) change build script to use maven publications(crypto, proto) and update README
 
 ### Document Updates
+
+## [v0.2.2]
+
+### Fixed
+* build: [#15](https://github.com/Finschia/finschia-kt/pull/15) fix for downloading maven dependency with 'descriptor.bin error'
+
+### Build, CI
+* [\#14](https://github.com/Finschia/finschia-kt/pull/14) change groupID for maven publish. remove tx module from maven publish.
+* build: [\#16](https://github.com/Finschia/finschia-kt/pull/16) change build script to use maven publications(crypto, proto) and update README
 
 
 ## [v0.2.1]
@@ -70,5 +76,6 @@ Ref: https://keepachangelog.com/en/1.0.0/
 
 
 <!-- Release links -->
-[Unreleased]: https://github.com/Finschia/finschia-kt/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/Finschia/finschia-kt/compare/v0.2.2...HEAD
+[v0.2.2]: https://github.com/Finschia/finschia-kt/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://github.com/Finschia/finschia-kt/compare/8aa2005...v0.2.1
