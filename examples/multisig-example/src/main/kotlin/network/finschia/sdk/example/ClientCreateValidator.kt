@@ -39,8 +39,8 @@ class MultiSigMsgCreateValidator {
             deliAddr: String,
             opAddr: String,
             amount: CoinOuterClass.Coin,
+            pubKey: String,
         ): Tx.MsgCreateValidator {
-            val pubKey = "bA6ozZ+fYrhU0KrRoJjFIKBWnOzd86G5dGJSCvlyuhA="
             val pubKeyBytes = Base64.getDecoder().decode(pubKey).toByteString()
             val header = ByteArray(2)
             header[0] = 0x0a
@@ -56,9 +56,9 @@ class MultiSigMsgCreateValidator {
                     moniker = "sim"
                 }
                 commission = cosmos.staking.v1beta1.commissionRates {
-                    rate = "100000000000000000"
-                    maxRate = "200000000000000000"
-                    maxChangeRate = "1"
+                    rate = "0.100000000000000000"           // 100000000000000000 * 10^-18
+                    maxRate = "0.200000000000000000"        // 200000000000000000 * 10^-18
+                    maxChangeRate = "0.010000000000000000"  // 1 * 10^-18
                 }
                 minSelfDelegation = "1"
                 delegatorAddress = deliAddr
@@ -123,26 +123,29 @@ class MultiSigMsgCreateValidator {
                 maxChangeRate = msg.commission.maxChangeRate,
             )
 
-            val pubk = PubKey(
-                typeUrl = msg.pubkey.typeUrl,
-                value = msg.pubkey.value.toByteArray(),
+            val pkByte = msg.pubkey.value.toByteArray()
+            val pkBody = pkByte.copyOfRange(2, pkByte.size)
+
+            val pubk = AminoSinglePubKey(
+                type = "tendermint/PubKeyEd25519",
+                value = Base64.getEncoder().encodeToString(pkBody)
             )
 
-            val co = Coin(
+            val coin = Coin(
                 denom = msg.value.denom,
                 amount = msg.value.amount,
             )
 
             return AminoMsg(
                 type = "cosmos-sdk/MsgCreateValidator",
-                value = AminoMsgValue(
+                value = AminoMsgCreateValidator(
                     description = desc,
                     commission = commissionRate,
                     minSelfDelegation =  msg.minSelfDelegation,
                     delegatorAddress = msg.delegatorAddress,
                     validatorAddress = msg.validatorAddress,
                     pubkey = pubk,
-                    value = co,
+                    value = coin,
                 )
             )
         }
@@ -195,7 +198,7 @@ suspend fun main() {
     val operatorAddress = pubkeyToAddress(multiSigPubKey, operPrefix)
 
     val multiSigAccNum = 9
-    val multiSigAccSeq = 2
+    val multiSigAccSeq = 0
     val timeoutHeight = 0
 
     // receiver address
@@ -215,12 +218,13 @@ suspend fun main() {
     // step 2: generate `MsgSend` unsigned tx
     //-----------------------------------------
     // generate MsgCreateValidator
+    val pubKey = "bA6ozZ+fYrhU0KrRoJjFIKBWnOzd86G5dGJSCvlyuhA="
     val amount = cosmos.base.v1beta1.coin {
         amount = "10000"
         denom = "stake"
     }
     val msgCreVal =
-        MultiSigMsgCreateValidator.createMsgCreateValidator(multiSigAddress, operatorAddress, amount)
+        MultiSigMsgCreateValidator.createMsgCreateValidator(multiSigAddress, operatorAddress, amount, pubKey)
 
     // generate unsigned tx body(amino type)
     val txBody = MultiSigMsgCreateValidator.generateTxBody(msgCreVal, timeoutHeight)
@@ -234,12 +238,14 @@ suspend fun main() {
         gasLimit,
         chainId
     )
+    println("UnsignedSignDoc: ${Json.encodeToJsonElement(unsignedSignDoc).removeNull().sort().toString()}")
 
     //-----------------------------------------
     // step 3: generate signature digest
     //-----------------------------------------
     // generate sign digest
     val signDigest = getSignDigest(unsignedSignDoc)
+    println("signDigest: ${toHex(signDigest)}")
 
     //-----------------------------------------
     // step 4: sign

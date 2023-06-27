@@ -32,20 +32,26 @@ data class PubKey(
 )
 
 @Serializable
-data class AminoMsgValue(
+data class AminoSinglePubKey(
+    @SerialName("type") val type: String,
+    @SerialName("value") val value: String,
+)
+
+@Serializable
+data class AminoMsgCreateValidator(
     @SerialName("description") val description: Description,
     @SerialName("commission") val commission: CommissionRates,
     @SerialName("min_self_delegation") val minSelfDelegation: String,
     @SerialName("delegator_address") val delegatorAddress: String,
     @SerialName("validator_address") val validatorAddress: String,
-    @SerialName("pubkey") val pubkey: PubKey,
+    @SerialName("pubkey") val pubkey: AminoSinglePubKey,
     @SerialName("value") val value: Coin,
 )
 
 @Serializable
 data class AminoMsg(
     @SerialName("type") val type: String,
-    @SerialName("value") val value: AminoMsgValue,
+    @SerialName("value") val value: AminoMsgCreateValidator,    // todo: Can't use Any type?
 )
 
 @Serializable
