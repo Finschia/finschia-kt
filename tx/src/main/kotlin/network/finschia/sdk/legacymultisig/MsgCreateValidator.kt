@@ -81,7 +81,7 @@ fun JsonElement.sort(): JsonElement {
 
 fun JsonElement.removeNull(): JsonElement {
     return when (this) {
-        is JsonObject -> JsonObject(this.jsonObject.toMap().filterValues { it != JsonNull }.map { it.key to it.value.removeNull() }.toMap())
+        is JsonObject -> JsonObject(this.jsonObject.toMap().filterValues { it != JsonNull && it != JsonPrimitive("null") }.map { it.key to it.value.removeNull() }.toMap())
         is JsonArray -> JsonArray(this.jsonArray.filter { it != JsonNull }.map { it.removeNull() })
         is JsonNull -> error("unexpected token")
         else -> this

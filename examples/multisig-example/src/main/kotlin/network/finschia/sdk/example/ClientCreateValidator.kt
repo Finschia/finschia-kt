@@ -56,9 +56,9 @@ class MultiSigMsgCreateValidator {
                     moniker = "sim"
                 }
                 commission = cosmos.staking.v1beta1.commissionRates {
-                    rate = "0.100000000000000000"           // 100000000000000000 * 10^-18
-                    maxRate = "0.200000000000000000"        // 200000000000000000 * 10^-18
-                    maxChangeRate = "0.010000000000000000"  // 1 * 10^-18
+                    rate = "100000000000000000"           // 100000000000000000 * 10^-18
+                    maxRate = "200000000000000000"        // 200000000000000000 * 10^-18
+                    maxChangeRate = "1"  // 1 * 10^-18
                 }
                 minSelfDelegation = "1"
                 delegatorAddress = deliAddr
@@ -111,16 +111,25 @@ class MultiSigMsgCreateValidator {
         fun toAminoMsg(msg: Tx.MsgCreateValidator): AminoMsg {
             val desc = Description(
                 moniker = msg.description.moniker,
-                identity = msg.description.identity,
-                website = msg.description.website,
-                securityContact = msg.description.securityContact,
-                details = msg.description.details,
+                identity = "null",
+                website = "null",
+                securityContact = "null",
+                details = "null",
+//                identity = msg.description.identity,
+//                website = msg.description.website,
+//                securityContact = msg.description.securityContact,
+//                details = msg.description.details,
             )
 
+//            val commissionRate = CommissionRates(
+//                rate = msg.commission.rate,
+//                maxRate = msg.commission.maxRate,
+//                maxChangeRate = msg.commission.maxChangeRate,
+//            )
             val commissionRate = CommissionRates(
-                rate = msg.commission.rate,
-                maxRate = msg.commission.maxRate,
-                maxChangeRate = msg.commission.maxChangeRate,
+                rate = "0.100000000000000000",           // 100000000000000000 * 10^-18
+                maxRate = "0.200000000000000000",        // 200000000000000000 * 10^-18
+                maxChangeRate = "0.000000000000000001"  // 1 * 10^-18
             )
 
             val pkByte = msg.pubkey.value.toByteArray()
