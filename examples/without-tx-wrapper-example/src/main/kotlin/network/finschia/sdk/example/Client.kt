@@ -72,7 +72,7 @@ class Utility {
 
 class ConcreteScenarios {
     companion object {
-        private const val CHAIN_ID = "sim"
+        private const val CHAIN_ID = "finschia"
         private const val BASE_DENOM = "stake"
 
         fun createBankMsgSendSingleDirect(
@@ -175,7 +175,7 @@ suspend fun main() {
         bobAddress,   // recipient address
         10000,        // amount in base denom
         alicePubKey,  // sender public key
-        1,            // sender sequence
+        6,            // sender sequence
         100000,       // timeout height
         "",           // memo
     )
