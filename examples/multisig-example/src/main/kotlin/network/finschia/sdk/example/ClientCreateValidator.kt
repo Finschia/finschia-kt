@@ -1,3 +1,18 @@
+/**
+ * Copyright 2023 Finschia Foundation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 package network.finschia.sdk.example
 
 import network.finschia.sdk.legacymultisig.*
@@ -13,6 +28,7 @@ import kotlinx.serialization.json.*
 import network.finschia.sdk.account.Address
 import network.finschia.sdk.account.HDWallet
 import network.finschia.sdk.account.KeyWallet
+import network.finschia.sdk.base.protoDecimalToJson
 import org.bouncycastle.jcajce.provider.digest.SHA256
 import java.util.*
 
@@ -56,9 +72,9 @@ class MultiSigMsgCreateValidator {
                     moniker = "sim"
                 }
                 commission = cosmos.staking.v1beta1.commissionRates {
-                    rate = "100000000000000000"           // 100000000000000000 * 10^-18
-                    maxRate = "200000000000000000"        // 200000000000000000 * 10^-18
-                    maxChangeRate = "1"  // 1 * 10^-18
+                    rate = "100000000000000000"             // 0.1 * 10^18
+                    maxRate = "200000000000000000"          // 0.2 * 10^18
+                    maxChangeRate = "1"                     // 0.000000000000000001 * 10^18
                 }
                 minSelfDelegation = "1"
                 delegatorAddress = deliAddr
@@ -110,26 +126,17 @@ class MultiSigMsgCreateValidator {
 
         fun toAminoMsg(msg: Tx.MsgCreateValidator): AminoMsg {
             val desc = Description(
-                moniker = msg.description.moniker,
-                identity = "null",
-                website = "null",
-                securityContact = "null",
-                details = "null",
-//                identity = msg.description.identity,
-//                website = msg.description.website,
-//                securityContact = msg.description.securityContact,
-//                details = msg.description.details,
+                moniker = if (msg.description.moniker.isNullOrEmpty()) null else msg.description.moniker,
+                identity = if (msg.description.identity.isNullOrEmpty()) null else msg.description.identity ,
+                website = if (msg.description.website.isNullOrEmpty()) null else msg.description.website,
+                securityContact = if (msg.description.securityContact.isNullOrEmpty()) null else msg.description.securityContact,
+                details = if (msg.description.details.isNullOrEmpty()) null else msg.description.details,
             )
 
-//            val commissionRate = CommissionRates(
-//                rate = msg.commission.rate,
-//                maxRate = msg.commission.maxRate,
-//                maxChangeRate = msg.commission.maxChangeRate,
-//            )
             val commissionRate = CommissionRates(
-                rate = "0.100000000000000000",           // 100000000000000000 * 10^-18
-                maxRate = "0.200000000000000000",        // 200000000000000000 * 10^-18
-                maxChangeRate = "0.000000000000000001"  // 1 * 10^-18
+                rate = protoDecimalToJson(msg.commission.rate),
+                maxRate = protoDecimalToJson(msg.commission.maxRate),
+                maxChangeRate = protoDecimalToJson(msg.commission.maxChangeRate)
             )
 
             val pkByte = msg.pubkey.value.toByteArray()
