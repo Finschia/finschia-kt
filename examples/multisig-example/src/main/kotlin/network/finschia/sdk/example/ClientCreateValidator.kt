@@ -97,6 +97,7 @@ class MultiSigMsgCreateValidator {
                 this.timeoutHeight = timeoutHeight.toLong()
             }
         }
+
         fun generateSignDoc(
             sendMsgs: List<Tx.MsgCreateValidator>,
             accNum: Int,
@@ -127,7 +128,7 @@ class MultiSigMsgCreateValidator {
         fun toAminoMsg(msg: Tx.MsgCreateValidator): AminoMsg {
             val desc = Description(
                 moniker = if (msg.description.moniker.isNullOrEmpty()) null else msg.description.moniker,
-                identity = if (msg.description.identity.isNullOrEmpty()) null else msg.description.identity ,
+                identity = if (msg.description.identity.isNullOrEmpty()) null else msg.description.identity,
                 website = if (msg.description.website.isNullOrEmpty()) null else msg.description.website,
                 securityContact = if (msg.description.securityContact.isNullOrEmpty()) null else msg.description.securityContact,
                 details = if (msg.description.details.isNullOrEmpty()) null else msg.description.details,
@@ -157,7 +158,7 @@ class MultiSigMsgCreateValidator {
                 value = AminoMsgCreateValidator(
                     description = desc,
                     commission = commissionRate,
-                    minSelfDelegation =  msg.minSelfDelegation,
+                    minSelfDelegation = msg.minSelfDelegation,
                     delegatorAddress = msg.delegatorAddress,
                     validatorAddress = msg.validatorAddress,
                     pubkey = pubk,
