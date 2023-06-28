@@ -38,7 +38,7 @@ class TxClient(private val channel: ManagedChannel) : Closeable {
     suspend fun broadcastTx(tx: cosmos.tx.v1beta1.TxOuterClass.TxRaw): cosmos.base.abci.v1beta1.Abci.TxResponse {
         val request = cosmos.tx.v1beta1.broadcastTxRequest {
             this.txBytes = tx.toByteString()
-            this.mode = cosmos.tx.v1beta1.ServiceOuterClass.BroadcastMode.BROADCAST_MODE_BLOCK
+            this.mode = cosmos.tx.v1beta1.ServiceOuterClass.BroadcastMode.BROADCAST_MODE_SYNC
         }
         val response = stub.broadcastTx(request)
         return response.txResponse
