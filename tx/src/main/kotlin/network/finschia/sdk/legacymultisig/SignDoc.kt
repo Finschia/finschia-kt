@@ -12,14 +12,21 @@ import kotlinx.serialization.json.*
 @Serializable
 data class AminoMsg(
     @SerialName("type") val type: String,
-    @SerialName("value") val value: AminoMsgValue,
+    @SerialName("value") val value: JsonElement,
 )
 
 @Serializable
-data class AminoMsgValue(
+data class AminoMsgSendValue(
     @SerialName("amount") val amount: List<Coin>,
     @SerialName("from_address") val fromAddress: String,
     @SerialName("to_address") val toAddress: String,
+)
+
+@Serializable
+data class AminoMsgDelegateValue(
+    @SerialName("amount") val amount: Coin,
+    @SerialName("delegator_address") val delegatorAddress: String,
+    @SerialName("validator_address") val validatorAddress: String,
 )
 
 @Serializable
