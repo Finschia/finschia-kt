@@ -15,6 +15,9 @@ data class AminoMsg(
     @SerialName("value") val value: JsonElement,
 )
 
+/**
+ * You can create many amino messages for other Msg: MsgUndelegate, MsgCreateValidator, MsgEditValidator.... by yourself
+ */
 @Serializable
 data class AminoMsgSendValue(
     @SerialName("amount") val amount: List<Coin>,

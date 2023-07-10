@@ -4,6 +4,8 @@ import network.finschia.sdk.legacymultisig.*
 import com.google.protobuf.ByteString
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.io.Closeable
 import java.util.concurrent.TimeUnit
 import kotlinx.serialization.json.*
@@ -310,6 +312,12 @@ suspend fun main() {
     //-----------------------------------------
     val result = client.broadcastTx(signedTx)
     println("result: $result")
+
+
+    //-----------------------------------------
+    // `MsgDelegate` scenario example
+    //-----------------------------------------
+
     multiSigAccSeq++
     val stakeDenom = "stake"
     // scenario description
@@ -358,9 +366,7 @@ suspend fun main() {
         signerToSigsDelegate
     )
 
-    //-----------------------------------------
-    // step 6: broadcast the signed tx
-    //-----------------------------------------
+    // broadcast the signed tx
     val resultDelegate = client.broadcastTx(signedDelegateTx)
     println("result: $resultDelegate")
 }

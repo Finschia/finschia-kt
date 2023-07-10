@@ -41,6 +41,7 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ### Added
 
 ### Changed
+build: [#19](https://github.com/Finschia/finschia-kt/pull/19) Change the value of AminoMsg to the general type
 
 ### Deprecated
 
