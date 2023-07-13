@@ -1,36 +1,14 @@
 package network.finschia.sdk.example
 
 import com.google.protobuf.kotlin.toByteString
-import cosmos.tx.v1beta1.ServiceOuterClass.BroadcastMode
-import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import network.finschia.sdk.account.HDWallet
 import network.finschia.sdk.base.Tx
-import java.io.Closeable
 import java.util.*
-import java.util.concurrent.TimeUnit
-
-class TxClient(private val channel: ManagedChannel) : Closeable {
-    private val stub = cosmos.tx.v1beta1.ServiceGrpcKt.ServiceCoroutineStub(channel)
-
-    suspend fun broadcastTx(tx: Tx): String {
-        val request = cosmos.tx.v1beta1.broadcastTxRequest {
-            txBytes = tx.raw().toByteString()
-            mode = BroadcastMode.BROADCAST_MODE_SYNC
-        }
-        val response = stub.broadcastTx(request)
-        return response.getTxResponse().getTxhash()
-    }
-
-    override fun close() {
-        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS)
-    }
-}
 
 suspend fun main() {
     val port = 9090
     val channel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext().build()
-    val client = TxClient(channel)
 
     val mnemonic =
         "mind flame tobacco sense move hammer drift crime ring globe art gaze cinnamon helmet cruise special produce notable negative wait path scrap recall have"
@@ -85,6 +63,6 @@ suspend fun main() {
 
     tx.sign(aliceKey, 0)
 
-    val result = client.broadcastTx(tx)
+    val result = TxClient(channel).use { it.broadcastTx(tx) }
     println(result)
 }

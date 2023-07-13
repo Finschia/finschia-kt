@@ -20,34 +20,13 @@ import com.google.protobuf.ByteString
 import com.google.protobuf.kotlin.toByteString
 import cosmos.base.v1beta1.CoinOuterClass
 import cosmos.staking.v1beta1.Tx
-import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import java.io.Closeable
-import java.util.concurrent.TimeUnit
 import kotlinx.serialization.json.*
-import network.finschia.sdk.account.Address
 import network.finschia.sdk.account.HDWallet
 import network.finschia.sdk.account.KeyWallet
 import network.finschia.sdk.base.protoDecimalToJson
 import org.bouncycastle.jcajce.provider.digest.SHA256
 import java.util.*
-
-class TxClient(private val channel: ManagedChannel) : Closeable {
-    private val stub = cosmos.tx.v1beta1.ServiceGrpcKt.ServiceCoroutineStub(channel)
-
-    suspend fun broadcastTx(tx: cosmos.tx.v1beta1.TxOuterClass.TxRaw): cosmos.base.abci.v1beta1.Abci.TxResponse {
-        val request = cosmos.tx.v1beta1.broadcastTxRequest {
-            this.txBytes = tx.toByteString()
-            this.mode = cosmos.tx.v1beta1.ServiceOuterClass.BroadcastMode.BROADCAST_MODE_SYNC
-        }
-        val response = stub.broadcastTx(request)
-        return response.txResponse
-    }
-
-    override fun close() {
-        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS)
-    }
-}
 
 class MultiSigMsgCreateValidator {
     companion object {
@@ -127,11 +106,11 @@ class MultiSigMsgCreateValidator {
 
         fun toAminoMsg(msg: Tx.MsgCreateValidator): AminoMsg {
             val desc = Description(
-                moniker = if (msg.description.moniker.isNullOrEmpty()) null else msg.description.moniker,
-                identity = if (msg.description.identity.isNullOrEmpty()) null else msg.description.identity,
-                website = if (msg.description.website.isNullOrEmpty()) null else msg.description.website,
-                securityContact = if (msg.description.securityContact.isNullOrEmpty()) null else msg.description.securityContact,
-                details = if (msg.description.details.isNullOrEmpty()) null else msg.description.details,
+                moniker = msg.description.moniker?.takeIf { it.isNotEmpty() },
+                identity = msg.description.identity?.takeIf { it.isNotEmpty() },
+                website = msg.description.website?.takeIf { it.isNotEmpty() },
+                securityContact = msg.description.securityContact?.takeIf { it.isNotEmpty() },
+                details = msg.description.details?.takeIf { it.isNotEmpty() },
             )
 
             val commissionRate = CommissionRates(
@@ -163,7 +142,7 @@ class MultiSigMsgCreateValidator {
                     validatorAddress = msg.validatorAddress,
                     pubkey = pubk,
                     value = coin,
-                )
+                ).toAminoMsgValue()
             )
         }
     }
@@ -181,9 +160,7 @@ suspend fun main() {
     val port = 9090
     val host = "localhost"
     val channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
-    val client = TxClient(channel)
-
-    val chainId = "simd-testing"
+    val chainId = "sim"
     val gasLimit = 200000
     val accountPrefix = "link"
     val operPrefix = "linkvaloper"
@@ -218,21 +195,15 @@ suspend fun main() {
     val multiSigAccSeq = 0
     val timeoutHeight = 0
 
-    // receiver address
-    val recipientAddress = Address(hdWallet.getKeyWallet(pubKeyNum + 1).pubKey).toBech32(accountPrefix)
-    // remittance amount
-    val fundAmount = 1
-    val baseDenom = "stake"
-
     // scenario description
     println(
         "scenario: " +
-                "$multiSigAddress ($threshold of $pubKeyNum multi-sig address, acc num: $multiSigAccNum, acc seq: $multiSigAccSeq) sends $fundAmount$baseDenom to $recipientAddress on $chainId chain. " +
+                "$multiSigAddress ($threshold of $pubKeyNum multi-sig address, acc num: $multiSigAccNum, acc seq: $multiSigAccSeq) sends createValidator tx to $chainId chain. " +
                 "Gas limit is set to $gasLimit and timeout height is ${if (timeoutHeight <= 0) "not set" else "set to $timeoutHeight"}."
     )
 
     //-----------------------------------------
-    // step 2: generate `MsgSend` unsigned tx
+    // step 2: generate `MsgCreateValidator` unsigned tx
     //-----------------------------------------
     // generate MsgCreateValidator
     val pubKey = "bA6ozZ+fYrhU0KrRoJjFIKBWnOzd86G5dGJSCvlyuhA="
@@ -286,6 +257,6 @@ suspend fun main() {
     //-----------------------------------------
     // step 6: broadcast the signed tx
     //-----------------------------------------
-    val result = client.broadcastTx(signedTx)
+    val result = TxClient(channel).use { it.broadcastTx(signedTx) }
     println("result: $result")
 }

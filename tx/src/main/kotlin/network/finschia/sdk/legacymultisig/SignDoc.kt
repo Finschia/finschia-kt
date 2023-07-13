@@ -9,10 +9,12 @@ import kotlinx.serialization.json.*
  * https://github.com/cosmos/cosmjs/blob/79396bfaa49831127ccbbbfdbb1185df14230c63/packages/amino/src/signdoc.ts
  */
 
+typealias AminoMsgValue = JsonElement
+
 @Serializable
 data class AminoMsg(
     @SerialName("type") val type: String,
-    @SerialName("value") val value: JsonElement,
+    @SerialName("value") val value: AminoMsgValue,
 )
 
 /**
