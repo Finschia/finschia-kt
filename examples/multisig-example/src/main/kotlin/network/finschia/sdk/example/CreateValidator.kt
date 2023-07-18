@@ -37,13 +37,9 @@ class MultiSigMsgCreateValidator {
             pubKey: String,
         ): Tx.MsgCreateValidator {
             val pubKeyBytes = Base64.getDecoder().decode(pubKey).toByteString()
-            val header = ByteArray(2)
-            header[0] = 0x0a
-            header[1] = pubKeyBytes.size().toByte()
-            val pubKeyVal = header + pubKeyBytes.toByteArray()
             val pk = com.google.protobuf.any {
                 typeUrl = "/cosmos.crypto.ed25519.PubKey"
-                value = pubKeyVal.toByteString()
+                value = pubKeyBytes.toPubKeyProtoValue()
             }
 
             val msgCreateValidator = cosmos.staking.v1beta1.msgCreateValidator {
@@ -62,6 +58,14 @@ class MultiSigMsgCreateValidator {
                 value = amount
             }
             return msgCreateValidator
+        }
+
+        private fun ByteString.toPubKeyProtoValue(): ByteString {
+            val header = ByteArray(2)
+            header[0] = 0x0a
+            header[1] = this.size().toByte()
+            val v = header + this.toByteArray()
+            return v.toByteString()
         }
 
         fun generateTxBody(
