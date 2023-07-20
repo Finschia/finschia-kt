@@ -1,35 +1,14 @@
 package network.finschia.sdk.example
 
-import network.finschia.sdk.legacymultisig.*
 import com.google.protobuf.ByteString
-import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import java.io.Closeable
-import java.util.concurrent.TimeUnit
-import kotlinx.serialization.json.*
-import network.finschia.sdk.account.Address
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import network.finschia.sdk.account.HDWallet
 import network.finschia.sdk.account.KeyWallet
+import network.finschia.sdk.legacymultisig.*
 import org.bouncycastle.jcajce.provider.digest.SHA256
 
-class TxClient(private val channel: ManagedChannel) : Closeable {
-    private val stub = cosmos.tx.v1beta1.ServiceGrpcKt.ServiceCoroutineStub(channel)
-
-    suspend fun broadcastTx(tx: cosmos.tx.v1beta1.TxOuterClass.TxRaw): cosmos.base.abci.v1beta1.Abci.TxResponse {
-        val request = cosmos.tx.v1beta1.broadcastTxRequest {
-            this.txBytes = tx.toByteString()
-            this.mode = cosmos.tx.v1beta1.ServiceOuterClass.BroadcastMode.BROADCAST_MODE_SYNC
-        }
-        val response = stub.broadcastTx(request)
-        return response.txResponse
-    }
-
-    override fun close() {
-        channel.shutdown().awaitTermination(5, TimeUnit.SECONDS)
-    }
-}
 
 class MultisigMsgDelegate {
     companion object {
@@ -103,92 +82,6 @@ class MultisigMsgDelegate {
         }
     }
 }
-class MultisigMsgSend {
-    companion object {
-        fun addressFromMultiPubKey(
-            pubKeyList: List<ByteArray>,
-            threshold: Int,
-            addressPrefix: String = "link"
-        ): String {
-            val pubKeys = pubKeyList.map { encodeSecp256k1Pubkey(it) }
-            val multisigPubKey = createMultisigThresholdPubkey(pubKeys, threshold, txSigLimit = pubKeyList.size)
-            val multisigAddr = pubkeyToAddress(multisigPubKey, addressPrefix)
-            return multisigAddr
-        }
-
-        fun createMsgSend(
-            senderAddress: String,
-            recipientAddress: String,
-            amounts: List<cosmos.base.v1beta1.CoinOuterClass.Coin>
-        ): cosmos.bank.v1beta1.Tx.MsgSend {
-            val msg = cosmos.bank.v1beta1.msgSend {
-                fromAddress = senderAddress
-                toAddress = recipientAddress
-                amount += amounts
-            }
-            return msg
-        }
-
-        fun convertMsgSendToAminoMsg(msgSend: cosmos.bank.v1beta1.Tx.MsgSend): AminoMsg {
-            val coins = msgSend.amountList.map {
-                Coin(
-                    denom = it.denom,
-                    amount = it.amount.toString()
-                )
-            }
-            val jsonAminoMsgSend = AminoMsgSendValue(
-                fromAddress = msgSend.fromAddress,
-                amount = coins,
-                toAddress = msgSend.toAddress,
-            )
-
-            return AminoMsg(
-                type = "cosmos-sdk/MsgSend",
-                value = Json.encodeToJsonElement(jsonAminoMsgSend)
-            )
-        }
-
-        fun generateTxBody(
-            sendMsg: cosmos.bank.v1beta1.Tx.MsgSend,
-            timeoutHeight: Int
-        ): cosmos.tx.v1beta1.TxOuterClass.TxBody {
-            return cosmos.tx.v1beta1.txBody {
-                this.messages += com.google.protobuf.any {
-                    this.typeUrl = "/cosmos.bank.v1beta1.MsgSend"
-                    this.value = sendMsg.toByteString()
-                }
-                this.timeoutHeight = timeoutHeight.toLong()
-            }
-        }
-
-        fun getSignDigest(signDoc: StdSignDoc): ByteArray {
-            return SHA256.Digest()
-                .digest(Json.encodeToJsonElement(signDoc).removeNull().sort().toString().toByteArray())
-        }
-
-        fun generateSignDoc(
-            sendMsgs: List<cosmos.bank.v1beta1.Tx.MsgSend>,
-            accNum: Int,
-            accSeq: Int,
-            timeoutHeight: Int = 0,
-            gasLimit: Int,
-            chainId: String
-        ): StdSignDoc {
-            return StdSignDoc(
-                accountNumber = accNum.toString(),
-                sequence = accSeq.toString(),
-                timeoutHeight = if (timeoutHeight <= 0) null else timeoutHeight.toString(),
-                chainId = chainId,
-                memo = "",
-                fee = StdFee(
-                    amount = listOf(Coin(amount = "20", denom = "cony")),
-                    gas = gasLimit.toString(),
-                ),
-                msgs = sendMsgs.map { convertMsgSendToAminoMsg(it) },
-            )
-        }
-    }
-}
 
 suspend fun main() {
     //-----------------------------------------
@@ -197,8 +90,6 @@ suspend fun main() {
     val port = 9090
     val host = "localhost"
     val channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build()
-    val client = TxClient(channel)
-
     val chainId = "sim"
     val gasLimit = 200000
     val accountPrefix = "link"
@@ -244,90 +135,19 @@ suspend fun main() {
     var multiSigAccSeq = 0
     val timeoutHeight = 0
 
-    // receiver address
-    val recipientAddress = Address(hdWallet.getKeyWallet(pubKeyNum + 1).pubKey).toBech32(accountPrefix)
-    // remittance amount
     val fundAmount = 1
-    val baseDenom = "cony"
-
-    // scenario description
-    println(
-        "scenario: " +
-                "$multiSigAddress ($threshold of $pubKeyNum multi-sig address, acc num: $multiSigAccNum, acc seq: $multiSigAccSeq) sends $fundAmount$baseDenom to $recipientAddress on $chainId chain. " +
-                "Gas limit is set to $gasLimit and timeout height is ${if (timeoutHeight <= 0) "not set" else "set to $timeoutHeight"}."
-    )
-
-    //-----------------------------------------
-    // step 2: generate `MsgSend` unsigned tx
-    //-----------------------------------------
-    // generate sendMsg
-    val msgSend = MultisigMsgSend.createMsgSend(
-        multiSigAddress,
-        recipientAddress,
-        listOf(cosmos.base.v1beta1.coin {
-            this.amount = fundAmount.toString()
-            this.denom = baseDenom
-        })
-    )
-
-    // generate unsigned tx body(amino type)
-    val txBody = MultisigMsgSend.generateTxBody(msgSend, timeoutHeight)
-
-    // generate amino signDoc
-    val unsignedSignDoc = MultisigMsgSend.generateSignDoc(
-        listOf(msgSend),
-        multiSigAccNum,
-        multiSigAccSeq,
-        timeoutHeight,
-        gasLimit,
-        chainId
-    )
-
-    //-----------------------------------------
-    // step 3: generate signature digest
-    //-----------------------------------------
-    // generate sign digest
-    val signDigest = MultisigMsgSend.getSignDigest(unsignedSignDoc)
-
-    //-----------------------------------------
-    // step 4: sign
-    //-----------------------------------------
-    val signerToSigs: Map<String, ByteString> = signers.map {
-        it.address.toBech32(accountPrefix) to ByteString.copyFrom(it.sign(signDigest).copyOfRange(0, 64))
-    }.toMap()
-
-    //-----------------------------------------
-    // step 5: generate signed tx
-    //-----------------------------------------
-    val signedTx = makeMultisignedTx(
-        multiSigPubKey,
-        multiSigAccSeq,
-        unsignedSignDoc.fee,
-        txBody.toByteString(),
-        signerToSigs
-    )
-
-    //-----------------------------------------
-    // step 6: broadcast the signed tx
-    //-----------------------------------------
-    val result = client.broadcastTx(signedTx)
-    println("result: $result")
-
-
-    //-----------------------------------------
-    // `MsgDelegate` scenario example
-    //-----------------------------------------
-
-    multiSigAccSeq++
     val stakeDenom = "stake"
     // scenario description
-    val validatorAddress = "linkvaloper1twsfmuj28ndph54k4nw8crwu8h9c8mh33lyrp8" //change for yourself
+    val validatorAddress = "linkvaloper146asaycmtydq45kxc8evntqfgepagygeddajpy" //change for yourself
     println(
         "scenario: " +
                 "$multiSigAddress ($threshold of $pubKeyNum multi-sig address, acc num: $multiSigAccNum, acc seq: $multiSigAccSeq) delegate $fundAmount$stakeDenom to $validatorAddress on $chainId chain. " +
                 "Gas limit is set to $gasLimit and timeout height is ${if (timeoutHeight <= 0) "not set" else "set to $timeoutHeight"}."
     )
 
+    //-----------------------------------------
+    // step 2: generate `MsgDelegate` unsigned tx
+    //-----------------------------------------
     // generate sendDelegate
     val msgDelegate = MultisigMsgDelegate.createMsgDelegate(
         multiSigAddress,
@@ -351,22 +171,32 @@ suspend fun main() {
         chainId
     )
 
-    // generate sign digest
+    //-----------------------------------------
+    // step 3: generate signature digest
+    //-----------------------------------------
     val signDigestDelegate = MultisigMsgDelegate.getSignDigest(delegateUnsignedSignDoc)
 
+    //-----------------------------------------
+    // step 4: sign
+    //-----------------------------------------
     val signerToSigsDelegate: Map<String, ByteString> = signers.map {
         it.address.toBech32(accountPrefix) to ByteString.copyFrom(it.sign(signDigestDelegate).copyOfRange(0, 64))
     }.toMap()
 
+    //-----------------------------------------
+    // step 5: generate signed tx
+    //-----------------------------------------
     val signedDelegateTx = makeMultisignedTx(
         multiSigPubKey,
         multiSigAccSeq,
-        unsignedSignDoc.fee,
+        delegateUnsignedSignDoc.fee,
         txDelegateBody.toByteString(),
         signerToSigsDelegate
     )
 
-    // broadcast the signed tx
-    val resultDelegate = client.broadcastTx(signedDelegateTx)
+    //-----------------------------------------
+    // step 6: broadcast the signed tx
+    //-----------------------------------------
+    val resultDelegate = TxClient(channel).use { it.broadcastTx(signedDelegateTx) }
     println("result: $resultDelegate")
 }

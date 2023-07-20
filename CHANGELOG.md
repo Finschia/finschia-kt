@@ -39,9 +39,10 @@ Ref: https://keepachangelog.com/en/1.0.0/
 ## [Unreleased]
 
 ### Added
+* [\#21](https://github.com/Finschia/finschia-kt/pull/21) add MsgCreateValidator examples for single and multi-sig
 
 ### Changed
-build: [#19](https://github.com/Finschia/finschia-kt/pull/19) Change the value of AminoMsg to the general type
+* [\#19](https://github.com/Finschia/finschia-kt/pull/19) change the value of AminoMsg to the general type
 
 ### Deprecated
 
