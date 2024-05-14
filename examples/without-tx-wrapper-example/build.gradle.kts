@@ -11,7 +11,7 @@ dependencies {
 
     // Finschia sdk
     implementation("network.finschia:finschia-kt-crypto:0.2.2")
-    implementation("network.finschia:finschia-proto:2.0.0")
+    implementation("network.finschia:finschia-proto:4.0.0-rc2")
 }
 
 application {
