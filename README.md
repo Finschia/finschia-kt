@@ -2,9 +2,9 @@
 
 gRPC client library in kotlin for finschia (https://github.com/Finschia/finschia).
 
-Requires [finschia-sdk v0.48.0](https://github.com/Finschia/finschia-sdk/tree/v0.48.0)
+Requires [finschia-sdk v0.49.0](https://github.com/Finschia/finschia-sdk/tree/v0.49.0)
 
-Current finschia-sdk version applied to finschia-kt/protobuf is [finschia-sdk v0.48.0](https://github.com/Finschia/finschia-sdk/tree/v0.48.0)
+Current finschia-sdk version applied to finschia-kt/protobuf is [finschia-sdk v0.49.0](https://github.com/Finschia/finschia-sdk/tree/v0.49.0)
 
 ## Using SDK
 
@@ -17,7 +17,7 @@ dependencies {
 ```
 * finschia-kt SDK(proto)
 ```kotlin
-val sdkProtoVersion = "2.0.0"
+val sdkProtoVersion = "4.0.0"
 
 dependencies {
    implementation("network.finschia:finschia-proto:$sdkProtoVersion")
@@ -91,7 +91,7 @@ The former is using the tx wrapper, while the latter does not use the wrapper.
 
 ### 1. Run finschia-sdk simapp
 
-Build with reference to [Quick Start build](https://github.com/Finschia/finschia-sdk/tree/v0.48.0#quick-start).
+Build with reference to [Quick Start build](https://github.com/Finschia/finschia-sdk/tree/v0.49.0#quick-start).
 
 Initialize and configure simapp.
 
